@@ -1,0 +1,13 @@
+[mod]
+title: Plastic Warfare Reloaded
+description: Version: V2.1 "Spaghetti" - Master Remake [March 2022] | Made by General Airon | Join our server!  https://discord.gg/CUbWktM | Subscribe to my Youtube Channel: youtube.com/channel/GeneralAironOfficial
+
+minVersion: 1.15p8
+
+tags: starting-units, units, General Airon, battle royale, scavenge
+
+thumbnail: thumb.jpg
+
+[music]
+sourceFolder: Plastic_Warfare_BGM/
+whenUsingUnitsFromThisMod_playExclusively: true

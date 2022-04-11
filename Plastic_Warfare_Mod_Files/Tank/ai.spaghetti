@@ -1,0 +1,154 @@
+[hiddenAction_syncClock]
+autoTrigger: true
+setResourcesWithLogic: timeMinutes=memory.server.resource(type="timeMinutes"), timeSeconds=memory.server.resource(type="timeSeconds")
+
+
+[core]
+@memory waypointCat:text
+
+[hiddenAction_randomMove]
+text: RandomMovement
+buildSpeed: 0
+addWaypoint_type: move
+addWaypoint_prepend: false
+addWaypoint_position_randomOffsetFromSelf: 500, 500
+clearAllWaypoints: false
+addWaypoint_target_mapMustBeReachable: true
+isActive: false
+autoTrigger: if not self.isMoving() and memory.equipment.attacking != nullUnit and self.isControlledByAI() and distanceBetween(self, memory.server.readUnitMemory(name="zonecoord", type="unit")) <= memory.server.readUnitMemory(name="zoneSize", type="number") and memory.server.readUnitMemory(name="phase", type="number") >= 6 and (self.resource.charge >= (50 * (memory.currentTier + 1))) and memory.minClockAI < memory.tenSec and activeWaypointTarget == nullUnit 
+debugMessage: Rover %{self.id} moving at some spot
+setUnitMemory: waypointCat="move to point"
+
+[action_chkDistance]
+text: chkDistNce
+description: """
+Rover %{self.id}\n
+Distance to Zone: %{distanceBetween(self, memory.server.readUnitMemory(name="zonecoord", type="unit"))}\n
+Zone Size %{memory.server.readUnitMemory(name="zoneSize", type="number")}\n
+Safe Zone? %{memory.safetyzone.x}, %{memory.safetyzone.y}\n
+
+[WAYPOINTS]\n
+
+Directed to a spawner chk? %{activeWaypointTarget.nearestUnit(withTag="spawner", withinRange=100, relation="any") != nullUnit}\n
+ActiveWaypointTarget: %{activeWaypointTarget}\n
+Waypoint: %{memory.waypointCat}\n
+Waypoint Coords: %{activeWaypointTarget.x}, %{activeWaypointTarget.y}\n\n
+
+
+[CLOCKS]\n\n
+MinClockAI: %{memory.minClockAI}\n
+FiveSec: %{memory.fiveSec}
+"""
+isActive: false
+addResources: energy=1
+isVisible: false
+
+[hiddenAction_randomMoveSafety]
+text: RandomMovementButSafe
+buildSpeed: 0
+addWaypoint_type: move
+addWaypoint_prepend: false
+#addWaypoint_position_randomOffsetFromSelf: 500, 500
+addWaypoint_target_fromReference: unitref memory.safetyzone
+clearAllWaypoints: false
+addWaypoint_target_mapMustBeReachable: true
+isActive: false
+autoTrigger: if self.isControlledByAI() and distanceBetween(self, memory.server.readUnitMemory(name="zonecoord", type="unit")) > memory.server.readUnitMemory(name="zoneSize", type="number")/2 and activeWaypointTarget == nullUnit and memory.server.readUnitMemory(name="zoneSize", type="number") != 0
+debugMessage: Rover %{self.id} evacuating to safe zone
+setUnitMemory: waypointCat="evac to safe zone"
+
+[hiddenAction_seekWeaponMove]
+text: WeaponMovement
+buildSpeed: 0
+addWaypoint_type: move
+addWaypoint_prepend: true
+addWaypoint_target_nearestUnit_team: any
+addWaypoint_target_nearestUnit_maxRange: 1000
+addWaypoint_target_nearestUnit_tagged: gun
+clearAllWaypoints: false
+addWaypoint_target_mapMustBeReachable: true
+isActive: false
+autoTrigger: if attachment.transportingCount() < 1 and  self.isControlledByAI() and (self.resource.charge >= (50 * (memory.currentTier + 1))) and activeWaypointTarget == nullUnit and memory.minClockAI > 15
+debugMessage: Rover %{self.id()} seeking weapon...
+setUnitMemory: waypointCat="find weapon"
+
+[template_seekHigherWeaponMove]
+text: WeaponMovementBetterTier
+buildSpeed: 0
+addWaypoint_type: move
+addWaypoint_prepend: true
+addWaypoint_target_nearestUnit_team: any
+addWaypoint_target_nearestUnit_maxRange: 1000
+addWaypoint_target_fromReference: unitref nearestUnit(withTag="tier${gunTier}", withinRange=1000)
+addWaypoint_target_mapMustBeReachable: true
+clearAllWaypoints: false
+isActive: false
+autoTrigger: if (attachment.transportingCount() >= 0) and rnd(0,5) >=2.5 and self.isControlledByAI() and memory.currentTier == ${curTier} and (self.resource.charge >= (50 * (memory.currentTier + 1))) and memory.fiveSec > memory.minClockAI and activeWaypointTarget == nullUnit and numberOfUnitsInNeutralTeam(withTag="tier${gunTier}", withinRange=1000) > 0
+debugMessage: Rover %{self.id()} seeking better weapon...
+setUnitMemory: waypointCat="find better weapon with tier ${gunTier}"
+
+[hiddenAction_gunTier2]
+@define gunTier: 2
+@define curTier: 1
+@copyFromSection: template_seekHigherWeaponMove
+
+[hiddenAction_gunTier3]
+@define gunTier: 3
+@define curTier: 2
+@copyFromSection: template_seekHigherWeaponMove
+
+[hiddenAction_gunTier4]
+@define gunTier: 4
+@define curTier: 3
+@copyFromSection: template_seekHigherWeaponMove
+
+[hiddenAction_seekInjectors]
+text: InjectorHunter
+buildSpeed: 0
+addWaypoint_type: move
+addWaypoint_prepend: false
+addWaypoint_target_nearestUnit_team: any
+addWaypoint_target_nearestUnit_maxRange: 1000
+addWaypoint_target_fromReference: unitref nearestUnit(withTag="packs", withinRange=1000)
+clearAllWaypoints: false
+isActive: false
+autoTrigger: if self.isControlledByAI() and (self.resource.charge < (50 * (memory.currentTier + 1))) and numberOfUnitsInNeutralTeam(withTag="packs", withinRange=1000) > 0 and memory.waypointCat != "find injectors"
+debugMessage: Rover %{self.id()} seeking injectors
+addWaypoint_triggerActionIfMatched: collect
+setUnitMemory: waypointCat="find injectors"
+
+[hiddenAction_deleteCoordinatesWhenBad]
+autoTrigger: if activeWaypointTarget.isInMap() == false and self.isControlledByAI()
+clearAllWaypoints: true
+debugMessage: AutoCoord %{activeWaypointTarget.x} %{activeWaypointTarget.y} is bad. clearing...
+
+[core]
+@memory server:unit
+@memory safetyzone:unit
+@memory minClockAI:number
+@memory fiveSec:number
+@memory tenSec:number
+
+[hiddenAction_clockGenReset]
+autoTrigger: if self.isControlledByAI() and memory.minClockAI > 29
+setUnitMemory: minClockAI = 0
+
+[hiddenAction_clockGenReset2]
+autoTrigger: if self.isControlledByAI() and memory.fiveSec > 4
+setUnitMemory: fiveSec = 0
+
+[hiddenAction_clockGenReset3]
+autoTrigger: if self.isControlledByAI() and memory.tenSec > 9
+setUnitMemory: tenSec = 0
+
+[hiddenAction_clockGen]
+autoTrigger: if self.isControlledByAI()
+setUnitMemory: minClockAI = memory.minClockAI + 1, fiveSec = memory.fiveSec + 1, tenSec = memory.tenSec + 1
+
+[hiddenAction_setSafety]
+autoTrigger: if self.isControlledByAI()
+setUnitMemory: safetyzone = createMarker(x=int(memory.server.readUnitMemory(name="zonecoord", type="unit").x/2)+int(rnd(-200, 200)),  y=int(memory.server.readUnitMemory(name="zonecoord", type="unit").y)+int(rnd(-200, 200)))
+
+[hiddenAction_server]
+autoTriggerOnEvent: created
+setUnitMemory: server = globalSearchForFirstUnit(withTag="server")

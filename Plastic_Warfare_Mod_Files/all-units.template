@@ -1,0 +1,134 @@
+[global_resource_charge]
+displayName: Energy
+displayColor: #ff0000
+#hidden: true
+iconImage: ROOT:Plastic_Warfare_Mod_Files/icons/icon_energy.png
+displayNameHideWhenIconShownInText: true
+displayNameHideWhenIconShownInHUD: true
+hidden: true
+displayWhenZero: true
+displayTextAppendResource: timeMinutes
+displayTextPostfix: 
+
+[global_resource_integrity]
+displayName: HP
+displayColor: #00ff00
+displayTextAppendResource: plasma
+displayTextPostfix:ㅤ
+iconImage: ROOT:Plastic_Warfare_Mod_Files/icons/icon_hp.png
+displayNameHideWhenIconShownInText: true
+displayNameHideWhenIconShownInHUD: true
+hidden: false
+displayRoundedDown: true
+displayPos: 1
+
+[global_resource_plasma]
+displayName: Shield
+displayColor: #00f4f4
+displayTextAppendResource: charge
+displayTextPostfix:ㅤ
+hidden: true
+iconImage: ROOT:Plastic_Warfare_Mod_Files/icons/icon_shield.png
+displayNameHideWhenIconShownInText: true
+displayNameHideWhenIconShownInHUD: true
+hidden: true
+displayWhenZero: true
+
+[global_resource_mineCorrosol]
+displayName: Corrosol Dispenser(s)
+displayColor: #ffb200
+displayTextAppendResource: mineDisorient
+iconImage: ROOT:Plastic_Warfare_Mod_Files/icons/icon_corrosol.png
+displayNameHideWhenIconShownInText: true
+displayNameHideWhenIconShownInHUD: true
+hidden: true
+displayWhenZero: true
+
+[global_resource_mineStandard]
+displayName: Landmines
+displayColor: #008100
+displayTextAppendResource: mineCorrosol
+iconImage: ROOT:Plastic_Warfare_Mod_Files/icons/icon_landmine.png
+displayNameHideWhenIconShownInText: true
+displayNameHideWhenIconShownInHUD: true
+#hidden: true
+displayWhenZero: true
+displayPos: 2
+
+[global_resource_mineDisorient]
+displayName: Disorientation Device
+displayColor: #0098ff
+#displayTextAppendResource: mineCorrosol
+iconImage: ROOT:Plastic_Warfare_Mod_Files/icons/icon_disorient.png
+displayNameHideWhenIconShownInText: true
+displayNameHideWhenIconShownInHUD: true
+hidden: true
+displayWhenZero: true
+
+[resource_autoUnload]
+displayName: AutoUnload
+
+[global_resource_repairPack]
+displayName: Repair Packs
+displayColor: #00ff00
+displayTextAppendResource: mobileSentry1
+iconImage: ROOT:Plastic_Warfare_Mod_Files/icons/icon_repair.png
+displayNameHideWhenIconShownInText: true
+displayNameHideWhenIconShownInHUD: true
+#hidden: true
+displayWhenZero: true
+displayPos: 3
+
+[global_resource_mobileSentry1]
+displayName: Mobile Sentry 1
+displayColor: #00ff00
+#displayTextAppendResource: mineCorrosol
+iconImage: ROOT:Plastic_Warfare_Mod_Files/icons/icon_ms1.png
+displayNameHideWhenIconShownInText: true
+displayNameHideWhenIconShownInHUD: true
+displayWhenZero: true
+displayPos: 3
+hidden: true
+
+[global_resource_timeMinutes]
+displayName: M
+iconImage: ROOT:Plastic_Warfare_Mod_Files/icons/icon_zoneTime.png
+displayNameHideWhenIconShownInText: true
+displayNameHideWhenIconShownInHUD: true
+hidden: true
+displayWhenZero: true
+displayPos: 4
+displayTextAppendResource: timeSeconds
+
+
+[global_resource_timeSeconds]
+displayName: S
+displayTextPrefix: :
+hidden: true
+displayWhenZero: true
+displayPos: 4
+
+[resource_delivery]
+displayName: Delivery
+
+
+[resource_shieldPack]
+displayName: Shield Packs
+
+[resource_statusStun]
+displayName: Stunned Status
+
+[resource_statusStuck]
+displayName: Stucked Status
+
+[resource_statusSlowed]
+displayName: Slowed Status
+
+[resource_statusJam]
+displayName: Jammed Status
+
+[resource_statusLag]
+displayName: Lagged Status
+
+[resource_statusDisorient]
+displayName: Disoriented Status

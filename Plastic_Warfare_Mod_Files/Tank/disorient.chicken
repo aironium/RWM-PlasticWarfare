@@ -1,0 +1,114 @@
+
+[hiddenAction_disorientor]
+autoTriggerOnEvent: created
+setUnitMemory: disorient="■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■", fog=20
+spawnEffects: CUSTOM:field*5
+
+[action_fishboneStranded]
+text: Force Drop
+price: 0
+buildSpeed: 0
+description: Drop vehicle from Fisbone
+disconnectFromParent: true
+pos: -9999
+isVisible: if self.hasParent()
+
+
+
+
+[effect_field]
+life: 50
+lifeRandom: 20
+priority: critical
+fadeOut: true
+attachedToUnit: false
+image: field.png
+total_frames: 16
+animateFrameStart: 0
+animateFrameEnd: 15
+animateFramePingPong: true
+animateFrameSpeed: 0.1
+scaleFrom: 1
+scaleTo: 0.5
+dirSpeed: 3
+dirSpeedRandom: 5
+alpha: 1.5
+drawUnderUnits: true
+
+[effect_field2]
+life: 100
+priority: critical
+fadeOut: true
+attachedToUnit: false
+image: field2.png
+total_frames: 16
+scaleFrom: 0.5
+scaleTo: 2
+alpha: 1.5
+animateFrameStart: 0
+animateFrameEnd: 15
+animateFramePingPong: true
+animateFrameSpeed: 0.5
+dirSpeed: -3
+
+[core]
+@memory delivery:unit
+
+[turret_delivery]
+canShoot: false
+x: 0
+y: 0
+idleDir:0
+invisible: true
+projectile: deliver
+limitingRange: 300
+size: 1
+
+[projectile_deliver]
+directDamage: 0
+life: 100
+speed: 0.1
+instant: true
+deflectionPower:-1
+
+
+
+
+[action_mineLauncher]
+fireTurretXAtGround: delivery
+fireTurretXAtGround_withProjectile: deliver
+addActionCooldownTime: 3s
+isVisible: if self.attachment(slot="sidearmMount").readUnitMemory(name="weapon", type="unit").tags(includes="weapon_mineLauncher")
+price: charge=45
+buildSpeed: 0s
+alsoTriggerAction: sendToLauncher
+text: Launch Nanomines
+description: Select scatter area
+pos: 2
+iconImage: ROOT:Plastic_Warfare_Mod_Files/icons/icon_nanomine.png
+
+[hiddenAction_sendToLauncher]
+sendMessageWithTags: mineLaunch
+sendMessageWithData: launchCoord=self.thisActionTarget
+sendMessageTo: self.attachment(slot="sidearmMount").readUnitMemory(name="weapon", type="unit")
+
+
+[template_delivery]
+fireTurretXAtGround: delivery
+fireTurretXAtGround_withProjectile: deliver
+setUnitMemory: delivery = self.thisActionTarget
+spawnUnits: fishbone(offsetX=1000, offsetY=1000, addResources=delivery:${delivery})
+isLocked: if getOffsetAbsolute(x=900).isInMap == false or getOffsetAbsolute(y=900).isInMap == false
+isLockedMessage: Try moving a little bit further away from game zone's edges
+addActionCooldownTime: 60s
+isLocked: if numberOfUnitsInTeam(withTag='${type}') > 4
+allowMultipleInQueue: false
+[action_delivery-MobileSentry]
+@copyFromSection: template_delivery
+text: Deliver: Mobile Sentry
+description: Place delivery location
+unitShownInUI: mobileSentry1
+descriptionAddFromUnit: mobileSentry1
+@define delivery: 1
+price: mobileSentry1=1
+@define type: mobileSentry
